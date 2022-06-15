@@ -2,11 +2,12 @@
     namespace Alura\Banco\Modelo\Conta;
 
     
-    class Conta
+    abstract class Conta
     {
-        private Titular $titular;
-        private string $numeroConta;
-        private float $saldo;
+        protected Titular $titular;
+        protected string $numeroConta;
+        protected string $tipoConta;
+        protected float $saldo;
         
 
         public function __construct(Titular $titular, string $numeroConta)
@@ -22,7 +23,7 @@
             return $this -> titular -> getNome();
         }
 
-        public function setNumeroConta(string $numero): void
+        protected function setNumeroConta(string $numero): void
         {
             $this -> numeroConta = $numero;
         }
@@ -47,5 +48,33 @@
             $novoSaldo = $valor + $this -> saldo;
             $this -> setSaldo($novoSaldo);
         }
+
+        public function saque(float $valor): void
+        {
+    
+            $valor += ($valor * $this -> tarifaSaque());
+
+            if ($valor <= $this -> saldo)
+            {
+                $novoSaldo = $this -> saldo - $valor;
+                $this -> setSaldo($novoSaldo);
+            } else {
+                echo "Saldo insuficiente!";
+            }
+        }
+
+        protected function setTipo(string $tipo)
+        {
+            $this -> tipoConta = $tipo;
+        }
+
+        public function getTipo(): string
+        {
+            return $this -> tipoConta;
+        }
+
+        abstract function tarifaSaque(): float;
+
+        
 
     }
